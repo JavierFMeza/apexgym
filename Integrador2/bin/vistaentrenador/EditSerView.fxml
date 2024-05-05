@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditSerViewController">
+   <StackPane fx:id="productsContent" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+
+          <BorderPane fx:id="Vista" prefHeight="500.0" prefWidth="800.0" stylesheets="@Styles.css">
+              <padding>
+                  <Insets left="30.0" right="30.0" />
+              </padding>
+              <top>
+                  <GridPane alignment="CENTER_RIGHT" BorderPane.alignment="CENTER_RIGHT">
+                      <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      </columnConstraints>
+                      <rowConstraints>
+                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                      <BorderPane.margin>
+                          <Insets top="20.0" />
+                      </BorderPane.margin>
+                      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                          <TextField fx:id="TxtBus" layoutX="1.0" layoutY="2.0" prefHeight="25.0" prefWidth="291.0" promptText="search by product name or description" />
+                          <Button fx:id="BtnBus" layoutX="300.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#btnBUsOnAction" prefHeight="26.0" styleClass="button, info, sm" text="Buscar" />
+                      </AnchorPane>
+                  <Button fx:id="BtnBack" mnemonicParsing="false" onMouseClicked="#onBackClicked" prefHeight="26.0" styleClass="button, info, sm" text="Atras" GridPane.columnIndex="1" />
+                  <Label fx:id="txtError" alignment="CENTER" prefHeight="17.0" prefWidth="298.0" textAlignment="CENTER" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets right="60.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="Times New Roman" size="18.0" />
+                     </font>
+                  </Label>
+                  </GridPane>
+              </top>
+              <center>
+                  <TableView fx:id="tableEdit" editable="true" onMouseClicked="#onSelection" prefHeight="663.0" prefWidth="1220.0" styleClass="table-view">
+                      <columns>
+                          <TableColumn fx:id="ColId" prefWidth="75.0" text="ID">
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="name" />
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn fx:id="ColHorar" prefWidth="75.0" text="Horario">
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="price" />
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn fx:id="ColFec" prefWidth="75.0" text="Fecha">
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="quantity" />
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn fx:id="ColHora" prefWidth="75.0" text="Horas">
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="category_name" />
+                              </cellValueFactory>
+                          </TableColumn>
+                          <TableColumn fx:id="ColEnt" prefWidth="75.0" text="Entrenado">
+                              <cellValueFactory>
+                                  <PropertyValueFactory property="nr_sales" />
+                              </cellValueFactory>
+                          </TableColumn>
+                      </columns>
+                      <columnResizePolicy>
+                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                      </columnResizePolicy>
+                  <BorderPane.margin>
+                     <Insets top="10.0" />
+                  </BorderPane.margin>
+                  </TableView>
+              </center>
+            <bottom>
+               <GridPane prefHeight="209.0" prefWidth="740.0" BorderPane.alignment="CENTER">
+                 <columnConstraints>
+                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                 </columnConstraints>
+                 <rowConstraints>
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                 </rowConstraints>
+                  <children>
+                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="27.0" stroke="WHITE" strokeType="INSIDE" width="290.0">
+                        <GridPane.margin>
+                           <Insets left="60.0" />
+                        </GridPane.margin>
+                     </Rectangle>
+                     <Label prefHeight="17.0" prefWidth="48.0" text="ID" />
+                     <Label text="Entrenador" GridPane.rowIndex="1" />
+                     <Label text="Horario" GridPane.columnIndex="1" />
+                     <Label text="Fecha" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <Label prefHeight="38.0" prefWidth="61.0" text="Horas vendidas" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="2" />
+                     <Button fx:id="BtnGua" mnemonicParsing="false" onMouseClicked="#btnGuardarOnAction" text="Guardar" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                     <TextField fx:id="txtHora" prefHeight="25.0" prefWidth="424.0" GridPane.rowIndex="2">
+                        <GridPane.margin>
+                           <Insets left="60.0" right="20.0" />
+                        </GridPane.margin>
+                     </TextField>
+                     <TextField fx:id="txtFec" prefHeight="25.0" prefWidth="424.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <padding>
+                           <Insets left="60.0" />
+                        </padding>
+                        <GridPane.margin>
+                           <Insets left="60.0" right="20.0" />
+                        </GridPane.margin>
+                     </TextField>
+                     <ComboBox fx:id="comEnt" prefHeight="25.0" prefWidth="290.0" GridPane.rowIndex="1">
+                        <GridPane.margin>
+                           <Insets left="60.0" />
+                        </GridPane.margin>
+                     </ComboBox>
+                     <ComboBox fx:id="comHorar" prefHeight="25.0" prefWidth="289.0" GridPane.columnIndex="1">
+                        <GridPane.margin>
+                           <Insets left="60.0" />
+                        </GridPane.margin>
+                     </ComboBox>
+                     <Label fx:id="txtId" prefHeight="16.0" prefWidth="278.0">
+                        <GridPane.margin>
+                           <Insets left="65.0" />
+                        </GridPane.margin>
+                        <font>
+                           <Font name="Times New Roman" size="20.0" />
+                        </font>
+                     </Label>
+                     <Button fx:id="BtnEli" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#onEliminarClicked" text="Eliminar" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  </children>
+               </GridPane>
+            </bottom>
+          </BorderPane>
+      </children>
+   </StackPane>
+
+</AnchorPane>

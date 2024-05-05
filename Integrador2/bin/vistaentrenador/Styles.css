@@ -1,0 +1,35 @@
+#Vista {
+    -fx-background-color: linear-gradient(to bottom, #FFFD97, #FFBB97);
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+#BtnAdd {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnEdit {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnBus {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnTen {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnAddProd {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnBack {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnCrear{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#tableBuscar{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#tableEdit{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+#BtnGua{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
