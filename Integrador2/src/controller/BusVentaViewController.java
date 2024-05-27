@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import datos.BaseDatos;
 import datos.Venta;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -41,6 +42,9 @@ public class BusVentaViewController implements Initializable{
 
     @FXML
     private TableColumn<Venta, String> ColVen;
+    
+    @FXML
+    private TableColumn<Venta, Integer> Colpreto;
     
     @FXML
     private TableView<Venta> tableBuscar;
@@ -86,6 +90,11 @@ public class BusVentaViewController implements Initializable{
 	        this.ColNom.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
 	        this.ColPre.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("precio"));
 	        this.ColVen.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
+	        this.Colpreto.setCellValueFactory(cellData -> {
+                Venta venta = cellData.getValue();
+                int total = venta.getCantidad() * venta.getPrecio();
+                return new SimpleIntegerProperty(total).asObject();
+                });
 	        ObservableList<Venta> ventaObservableList = FXCollections.observableArrayList(data2);
 	        tableBuscar.setItems(ventaObservableList);
 	        txtError.setText("");
@@ -128,6 +137,11 @@ public class BusVentaViewController implements Initializable{
 				this.ColNom.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
 				this.ColPre.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("precio"));
 				this.ColVen.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
+				this.Colpreto.setCellValueFactory(cellData -> {
+	                Venta venta = cellData.getValue();
+	                int total = venta.getCantidad() * venta.getPrecio();
+	                return new SimpleIntegerProperty(total).asObject();
+	                });
 				tableBuscar.setItems(this.data);
 				cargar();
 	}

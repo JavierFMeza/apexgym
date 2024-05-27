@@ -18,6 +18,7 @@ import datos.Producto;
 import datos.Session;
 import datos.Vendedor;
 import datos.Venta;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,6 +58,9 @@ public class EditVentasViewController implements Initializable {
 
     @FXML
     private TableColumn<Venta, String> ColVen;
+    
+    @FXML
+    private TableColumn<Venta, Integer> Colpreto;
     
     @FXML
     private TableView<Venta> tableEdit;
@@ -179,6 +183,11 @@ public class EditVentasViewController implements Initializable {
 	        this.ColNom.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
 	        this.ColPre.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("precio"));
 	        this.ColVen.setCellValueFactory(new PropertyValueFactory<Venta, String>("vendedor"));
+	        this.Colpreto.setCellValueFactory(cellData -> {
+                Venta venta = cellData.getValue();
+                int total = venta.getCantidad() * venta.getPrecio();
+                return new SimpleIntegerProperty(total).asObject();
+                });
 	        ObservableList<Venta> ventaObservableList = FXCollections.observableArrayList(data2);
 	        tableEdit.setItems(ventaObservableList);
 	        txtError.setText("");
@@ -221,6 +230,11 @@ public class EditVentasViewController implements Initializable {
 		this.ColNom.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
 		this.ColPre.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("precio"));
 		this.ColVen.setCellValueFactory(new PropertyValueFactory<Venta, String>("vendedor"));
+		this.Colpreto.setCellValueFactory(cellData -> {
+            Venta venta = cellData.getValue();
+            int total = venta.getCantidad() * venta.getPrecio();
+            return new SimpleIntegerProperty(total).asObject();
+            });
 		tableEdit.setItems(this.data);
 		cargar();
 		llenarComboBoxVend();
