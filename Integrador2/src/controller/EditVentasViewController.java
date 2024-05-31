@@ -282,6 +282,4 @@ public class EditVentasViewController implements Initializable {
         
 	}
 
-	
-
 }

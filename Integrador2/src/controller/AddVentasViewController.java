@@ -105,6 +105,7 @@ public class AddVentasViewController implements Initializable {
         String id = txtCodigo.getText();
         String idProducto = dataprovider.buscarIdProductoPorNombre(nombreProducto);
         String cedVendedor = dataprovider.buscarIdVendedorPorNombre(nombreVendedor);
+        
         boolean exito = dataprovider.guardarVenta(idProducto, cedVendedor, cantidad, fecha, id);
         if (exito) {
         	TxtError.setText("Completado");

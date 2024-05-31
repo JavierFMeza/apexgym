@@ -33,7 +33,7 @@ public class BaseDatos {
 			String query = "select * from usuarios";
 			ResultSet result = st.executeQuery(query);
 			while(result.next()) {
-				data.add(new LogIn(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
+				data.add(new LogIn(result.getString(1), result.getString(2), result.getString(3)));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -52,7 +52,7 @@ public class BaseDatos {
 			st.setString(2, password);
 			ResultSet result = st.executeQuery();
 			while(result.next()) {
-				user=new LogIn(result.getString(1), result.getString(2), result.getString(3), result.getString(4));
+				user=new LogIn(result.getString(1), result.getString(2), result.getString(3));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -72,10 +72,11 @@ public class BaseDatos {
 		Statement st;
 		try {
 			st = conn.createStatement();
-			String query = "SELECT v.id, p.nombre, p.precio, TO_CHAR(v.fecha, 'DD-MM-YYYY'), ve.nombre, v.cantidad " +
+			String query = "SELECT v.id, p.nombre, p.preciounit, TO_CHAR(v.fecha, 'DD-MM-YYYY'), ve.nombre, v.cantidad " +
 		               "FROM producto p " +
-		               "JOIN venta v ON p.id = v.idprod " +
-		               "JOIN vendedor ve ON v.cedven = ve.cedula ";
+		               "JOIN ventaprod vp ON p.id = vp.prodid " +
+		               "JOIN venta v ON vp.ventaid = v.id " +
+		               "JOIN vendedor ve ON v.cedven = ve.cedula";
 			ResultSet result = st.executeQuery(query);
 			while(result.next()) {
 				data1.add(new Venta(result.getString(1), result.getString(2), result.getInt(3), result.getString(4), result.getString(5),result.getInt(6)));
@@ -189,10 +190,11 @@ public class BaseDatos {
 	    Connection conn = this.getConnection();
 	    PreparedStatement st = null;
 	    try {
-	        String query = "SELECT v.id, p.nombre, p.precio, TO_CHAR(v.fecha, 'DD-MM-YYYY'), ve.nombre, v.cantidad " +
-			               "FROM producto p " +
-			               "JOIN venta v ON p.id = v.idprod " +
-			               "JOIN vendedor ve ON v.cedven = ve.cedula " +
+	        String query = "SELECT v.id, p.nombre, p.preciounit, TO_CHAR(v.fecha, 'DD-MM-YYYY'), ve.nombre, v.cantidad " +
+		               "FROM producto p " +
+		               "JOIN ventaprod vp ON p.id = vp.prodid " +
+		               "JOIN venta v ON vp.ventaid = v.id " +
+		               "JOIN vendedor ve ON v.cedven = ve.cedula" +
 	                       "WHERE v.id = ?";
 	        st = conn.prepareStatement(query);
 	        st.setString(1, id);
@@ -338,26 +340,36 @@ public class BaseDatos {
 	 * @param fecha La fecha de la venta en formato "DD-MM-YYYY".
 	 * @param id El ID de la venta a actualizar.
 	 */
-    public void actualizarVenta(String idProducto, String cedVendedor, int cantidad, String fecha, String id) {
-        String sql = "UPDATE venta SET cantidad = ?, fecha = TO_DATE(?,'DD-MM-YYYY'), cedven = ?, idprod = ? WHERE id = ?";
-        
-        try (Connection conn = getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(4, idProducto);
-            statement.setInt(1, cantidad);
-            statement.setString(2, fecha);
-            statement.setString(3, cedVendedor);
-            statement.setString(5, id);
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("¡Los datos han sido actualizados correctamente!");
-            } else {
-                System.out.println("¡No se han realizado cambios!");
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar los datos: " + e.getMessage());
-        }
-    }
+	public void actualizarVenta(String idProducto, String cedVendedor, int cantidad, String fecha, String id) {
+	    String sqlVenta = "UPDATE venta SET cantidad = ?, fecha = TO_DATE(?,'DD-MM-YYYY'), cedven = ? WHERE id = ?";
+	    String sqlVentaProd = "UPDATE ventaprod SET prodid = ? WHERE ventaid = ?";
+	    
+	    try (Connection conn = getConnection();
+	         PreparedStatement statementVenta = conn.prepareStatement(sqlVenta);
+	         PreparedStatement statementVentaProd = conn.prepareStatement(sqlVentaProd)) {
+	        
+	        // Actualizar la tabla venta
+	        statementVenta.setInt(1, cantidad);
+	        statementVenta.setString(2, fecha);
+	        statementVenta.setString(3, cedVendedor);
+	        statementVenta.setString(4, id);
+	        int rowsUpdatedVenta = statementVenta.executeUpdate();
+	        
+	        // Actualizar la tabla ventaprod
+	        statementVentaProd.setString(1, idProducto);
+	        statementVentaProd.setString(2, id);
+	        int rowsUpdatedVentaProd = statementVentaProd.executeUpdate();
+	        
+	        if (rowsUpdatedVenta > 0 && rowsUpdatedVentaProd > 0) {
+	            System.out.println("¡Los datos han sido actualizados correctamente!");
+	        } else {
+	            System.out.println("¡No se han realizado cambios!");
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al actualizar los datos: " + e.getMessage());
+	    }
+	}
+
     /**
      * Obtiene una lista de vendedores desde la base de datos.
      * 
@@ -392,25 +404,53 @@ public class BaseDatos {
      */
     public boolean guardarVenta(String idProducto, String cedVendedor, int cantidad, String fecha, String id) {
         Connection conn = getConnection();
-        PreparedStatement pst = null;
+        PreparedStatement pstVenta = null;
+        PreparedStatement pstVentaProducto = null;
         boolean exito = false;
         try {
-            String query = "INSERT INTO venta (id, cantidad, fecha, cedven, idprod) VALUES (?, ?, TO_DATE(?,'DD-MM-YYYY'), ?, ?)";
-            pst = conn.prepareStatement(query);
-            pst.setString(5, idProducto);
-            pst.setString(4, cedVendedor);
-            pst.setInt(2, cantidad);
-            pst.setString(3, fecha);
-            pst.setString(1, id);
-            int filasAfectadas = pst.executeUpdate();
-            if (filasAfectadas > 0) {
+            conn.setAutoCommit(false);
+            
+            // Insertar en la tabla venta
+            String queryVenta = "INSERT INTO venta (id, fecha, cantidad, cedven) VALUES (?, TO_DATE(?,'DD-MM-YYYY'), ?, ?)";
+            pstVenta = conn.prepareStatement(queryVenta);
+            pstVenta.setString(1, id);
+            pstVenta.setString(2, fecha);
+            pstVenta.setInt(3, cantidad);
+            pstVenta.setString(4, cedVendedor);
+            int filasAfectadasVenta = pstVenta.executeUpdate();
+            
+            // Insertar en la tabla ventaprod
+            String queryVentaProducto = "INSERT INTO ventaprod (ventaid, prodid) VALUES (?, ?)";
+            pstVentaProducto = conn.prepareStatement(queryVentaProducto);
+            pstVentaProducto.setString(1, id);
+            pstVentaProducto.setString(2, idProducto);
+            int filasAfectadasVentaProducto = pstVentaProducto.executeUpdate();
+            
+            if (filasAfectadasVenta > 0 && filasAfectadasVentaProducto > 0) {
+                conn.commit();
                 exito = true;
+            } else {
+                conn.rollback();
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                conn.rollback();
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+        } finally {
+            try {
+                if (pstVenta != null) pstVenta.close();
+                if (pstVentaProducto != null) pstVentaProducto.close();
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return exito;
     }
+
     /**
      * Guarda los datos de un producto en la base de datos.
      * 

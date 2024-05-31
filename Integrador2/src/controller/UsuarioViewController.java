@@ -1,16 +1,11 @@
 package controller;
 
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
 
 import datos.BaseDatos;
 import datos.LogIn;
-import datos.Vendedor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
 import javafx.scene.control.Label;
@@ -20,7 +15,7 @@ import javafx.stage.Stage;
 import load.LoadMenuEntView;
 import load.LoadMenuVentaView;
 
-public class UsuarioViewController implements Initializable{
+public class UsuarioViewController {
 	@FXML
     private Button btnDesco;
 	@FXML
@@ -29,10 +24,7 @@ public class UsuarioViewController implements Initializable{
 	private Button BtnVen;
 	@FXML
 	private Button BtnEnt;
-	@FXML
-	private Label LabelNom;
-	@FXML
-	private Label LabelCed;
+
 	@FXML
 	private Label Labelcar;
 	
@@ -77,15 +69,5 @@ public class UsuarioViewController implements Initializable{
         stage.close();
     }
 	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		this.dataprovider = new BaseDatos();
-		LinkedList<Vendedor> listaVendedor = dataprovider.getVend();
-		for (Vendedor producto : listaVendedor) {
-			LabelNom.setText(producto.getNombre());
-			LabelCed.setText(producto.getCedula());
-	    }
-		
-	}
+
 }
