@@ -1,20 +1,41 @@
 package controller;
 
-import javafx.fxml.FXML;
+import java.util.Map;
 
+import datos.BaseDatos;
+import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import load.LoadMenuEntView;
-import load.LoadMenuVentaView;
 import javafx.scene.input.MouseEvent;
 
 public class TendSerVistaController {
 	@FXML
-	private AnchorPane Vista;
-	@FXML
-	private Button BtnBack;
+    private BarChart<String, Number> barChart;
+    @FXML
+    private Button BtnBack;
+
+    private BaseDatos baseDatos;
+
+    public void initialize() {
+        baseDatos = new BaseDatos();
+        cargarDatos();
+    }
+
+    private void cargarDatos() {
+        Map<String, Integer> serviciosMasPedidos = baseDatos.getServiciosMasPedidos();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        for (Map.Entry<String, Integer> entry : serviciosMasPedidos.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+        barChart.getData().add(series);
+    }
 	
 
 	// Event Listener on Button[#BtnBack].onMouseClicked

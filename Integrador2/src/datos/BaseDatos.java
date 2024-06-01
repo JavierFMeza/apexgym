@@ -642,11 +642,6 @@ public class BaseDatos {
         return exito;
     }
     
-    
-    
-    
-    
-    
     public Map<String, Integer> getProductosMasVendidos() {
         Map<String, Integer> productosMasVendidos = new LinkedHashMap<>();
         String query = "SELECT producto.NOMBRE, COUNT(ventaprod.PRODID) AS cantidad_vendida " +
@@ -667,4 +662,27 @@ public class BaseDatos {
         }
         return productosMasVendidos;
     }
+    
+    
+    public Map<String, Integer> getServiciosMasPedidos() {
+        Map<String, Integer> serviciosMasPedidos = new LinkedHashMap<>();
+        String query = "SELECT ts.NOMBRE, COUNT(s.TIPID) AS cantidad_solicitada " +
+                       "FROM servicio s " +
+                       "JOIN tiposervicio ts ON s.TIPID = ts.ID " +
+                       "GROUP BY ts.NOMBRE " +
+                       "ORDER BY cantidad_solicitada DESC";
+
+        try (Connection conn = getConnection();
+             PreparedStatement statement = conn.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                serviciosMasPedidos.put(resultSet.getString("NOMBRE"), resultSet.getInt("cantidad_solicitada"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return serviciosMasPedidos;
+    }
+  
 }
