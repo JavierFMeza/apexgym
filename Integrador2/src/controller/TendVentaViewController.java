@@ -1,7 +1,11 @@
 package controller;
 
-import javafx.fxml.FXML;
+import java.util.Map;
 
+import datos.BaseDatos;
+import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 
 import javafx.scene.layout.AnchorPane;
@@ -13,7 +17,27 @@ public class TendVentaViewController {
 	@FXML
 	private AnchorPane Vista;
 	@FXML
-	private Button BtnBack;
+    private BarChart<String, Number> barChart;
+    @FXML
+    private Button BtnBack;
+
+    private BaseDatos baseDatos;
+
+    public void initialize() {
+        baseDatos = new BaseDatos();
+        cargarDatos();
+    }
+
+    private void cargarDatos() {
+        Map<String, Integer> productosMasVendidos = baseDatos.getProductosMasVendidos();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        for (Map.Entry<String, Integer> entry : productosMasVendidos.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+        barChart.getData().add(series);
+    }
 	
 	private LoadMenuVentaView lmvv;
 

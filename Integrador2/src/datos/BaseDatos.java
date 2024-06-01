@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class BaseDatos {
 	private String conectionstr = "jdbc:oracle:thin:@192.168.254.215:1521:orcl";
@@ -638,5 +640,31 @@ public class BaseDatos {
             e.printStackTrace();
         }
         return exito;
+    }
+    
+    
+    
+    
+    
+    
+    public Map<String, Integer> getProductosMasVendidos() {
+        Map<String, Integer> productosMasVendidos = new LinkedHashMap<>();
+        String query = "SELECT producto.NOMBRE, COUNT(ventaprod.PRODID) AS cantidad_vendida " +
+                       "FROM ventaprod " +
+                       "JOIN producto ON ventaprod.PRODID = producto.ID " +
+                       "GROUP BY producto.NOMBRE " +
+                       "ORDER BY cantidad_vendida DESC";
+
+        try (Connection conn = getConnection();
+             PreparedStatement statement = conn.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                productosMasVendidos.put(resultSet.getString("NOMBRE"), resultSet.getInt("cantidad_vendida"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productosMasVendidos;
     }
 }
