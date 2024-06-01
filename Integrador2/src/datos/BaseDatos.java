@@ -35,7 +35,7 @@ public class BaseDatos {
 			String query = "select * from usuarios";
 			ResultSet result = st.executeQuery(query);
 			while(result.next()) {
-				data.add(new LogIn(result.getString(1), result.getString(2), result.getString(3)));
+				data.add(new LogIn(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -45,22 +45,21 @@ public class BaseDatos {
 	}
 	
 	public LogIn login(String username, String password) {
-		LogIn user=null;
-		Connection conn = this.getConnection();
-		try {
-			String query = "select * from usuarios where usuario=? and contrasena=?";
-			PreparedStatement st = conn.prepareStatement(query);
-			st.setString(1, username);
-			st.setString(2, password);
-			ResultSet result = st.executeQuery();
-			while(result.next()) {
-				user=new LogIn(result.getString(1), result.getString(2), result.getString(3));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return user;
+	    LogIn user = null;
+	    Connection conn = this.getConnection();
+	    try {
+	        String query = "select * from usuarios where usuario=? and contrasena=?";
+	        PreparedStatement st = conn.prepareStatement(query);
+	        st.setString(1, username);
+	        st.setString(2, password);
+	        ResultSet result = st.executeQuery();
+	        if (result.next()) {
+	            user = new LogIn(result.getString("id"), result.getString("usuario"), result.getString("contrasena"), result.getString("profesion"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return user;
 	}
 
 	/**
