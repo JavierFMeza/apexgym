@@ -53,29 +53,39 @@
               <center>
                   <TableView fx:id="tableBuscar" editable="true" maxHeight="364.0" prefHeight="364.0" prefWidth="740.0" styleClass="table-view">
                       <columns>
-                          <TableColumn fx:id="ColId" prefWidth="75.0" text="ID">
+                          <TableColumn fx:id="ColId" prefWidth="82.0" text="ID">
                               <cellValueFactory>
                                   <PropertyValueFactory property="name" />
                               </cellValueFactory>
                           </TableColumn>
-                          <TableColumn fx:id="ColHorar" prefWidth="75.0" text="Horario">
+                          <TableColumn fx:id="ColHorar" prefWidth="123.0" text="Horario">
                               <cellValueFactory>
                                   <PropertyValueFactory property="price" />
                               </cellValueFactory>
                           </TableColumn>
-                          <TableColumn fx:id="ColFec" prefWidth="75.0" text="Fecha">
+                          <TableColumn fx:id="ColFec" prefWidth="125.0" text="Fecha">
                               <cellValueFactory>
                                   <PropertyValueFactory property="category_name" />
                               </cellValueFactory>
                           </TableColumn>
-                          <TableColumn fx:id="ColHora" prefWidth="75.0" text="Horas">
+                          <TableColumn fx:id="ColHora" prefWidth="100.0" text="Horas">
                               <cellValueFactory>
                                   <PropertyValueFactory property="nr_sales" />
                               </cellValueFactory>
                           </TableColumn>
-                     <TableColumn fx:id="ColEnt" prefWidth="75.0" text="Entrenador">
+                     <TableColumn fx:id="ColEnt" prefWidth="100.0" text="Entrenador">
                         <cellValueFactory>
                            <PropertyValueFactory property="quantity" />
+                        </cellValueFactory>
+                     </TableColumn>
+                     <TableColumn fx:id="ColSer" prefWidth="99.0" text="Servicio">
+                        <cellValueFactory>
+                           <PropertyValueFactory property="nr_sales" />
+                        </cellValueFactory>
+                     </TableColumn>
+                     <TableColumn fx:id="ColVal" prefWidth="75.0" text="Valor">
+                        <cellValueFactory>
+                           <PropertyValueFactory property="nr_sales" />
                         </cellValueFactory>
                      </TableColumn>
                       </columns>

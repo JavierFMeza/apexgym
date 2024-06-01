@@ -1,19 +1,23 @@
 package datos;
 
 public class Servicio {
-	private String id;
-	private String horario;
-	private String fecha;
-	private int horas;
-	private String nombre;
-	
-	public Servicio(String id, String horario, String fecha, int horas, String nombre ){
-		this.id = id;
-		this.horario = horario;
-		this.fecha = fecha;
-		this.horas = horas;
-		this.nombre = nombre;
-	}
+    private String id;
+    private String horario;
+    private String fecha;
+    private int horas;
+    private String nombreEntrenador;
+    private String nombreTipoServicio;
+    private int precioHora;
+
+    public Servicio(String id, String horario, String fecha, int horas, String nombreEntrenador, String nombreTipoServicio, int precioHora) {
+        this.id = id;
+        this.horario = horario;
+        this.fecha = fecha;
+        this.horas = horas;
+        this.nombreEntrenador = nombreEntrenador;
+        this.nombreTipoServicio = nombreTipoServicio;
+        this.precioHora = precioHora;
+    }
 
 	public String getId() {
 		return id;
@@ -47,14 +51,28 @@ public class Servicio {
 		this.horas = horas;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getNombreEntrenador() {
+		return nombreEntrenador;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setNombreEntrenador(String nombreEntrenador) {
+		this.nombreEntrenador = nombreEntrenador;
 	}
 
-	
-	
+	public String getNombreTipoServicio() {
+		return nombreTipoServicio;
+	}
+
+	public void setNombreTipoServicio(String nombreTipoServicio) {
+		this.nombreTipoServicio = nombreTipoServicio;
+	}
+
+	public double getPrecioHora() {
+		return precioHora;
+	}
+
+	public void setPrecioHora(int precioHora) {
+		this.precioHora = precioHora;
+	}
+
 }

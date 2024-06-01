@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import datos.BaseDatos;
 import datos.Entrenador;
 import datos.Producto;
+import datos.Servicio;
 import datos.Vendedor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +26,8 @@ public class AddSerViewController implements Initializable{
 
 	@FXML
     private ComboBox<String> BoxEnt;
+	@FXML
+    private ComboBox<String> BoxTip;
     @FXML
     private TextField BoxHora;
     @FXML
@@ -61,7 +64,7 @@ public class AddSerViewController implements Initializable{
      * Método para llenar el ComboBox con los nombres de los entrenadores.
      */
 	public void llenarComboBoxEnt() {
-		Boxhorar.setItems(FXCollections.observableArrayList("Mañana","Tarde","Noche"));
+		Boxhorar.setItems(FXCollections.observableArrayList("6-12 mañana","1-6 tarde","6-12 noche"));
 	    LinkedList<Entrenador> listaEntrenador = dataprovider.getEnt();
 	    BoxEnt.getItems().clear();
 	    for (Entrenador producto : listaEntrenador) {
@@ -84,20 +87,29 @@ public class AddSerViewController implements Initializable{
      * @param event El evento de clic del mouse.
      */
 	public void onCrearClicked(MouseEvent event) {
-		String nombreEnt = BoxEnt.getValue();
-        String horario = Boxhorar.getValue();
-        int hora = Integer.parseInt(BoxHora.getText());
-        String fecha = TxtFecha.getText();
-        String id = txtId.getText();
-        String idEnt = dataprovider.buscarIdSerPorNombre(nombreEnt);
-        boolean exito = dataprovider.guardarSer(idEnt, horario, hora, fecha, id);
-        if (exito) {
-        	TxtError.setText("Completado");
-        } 
-        else {
-        	TxtError.setText("Error en guardar");
-        }
+	    String nombreEnt = BoxEnt.getValue();
+	    String horario = Boxhorar.getValue();
+	    int hora = Integer.parseInt(BoxHora.getText());
+	    String fecha = TxtFecha.getText();
+	    String id = txtId.getText();
+	    String nombreServicio = BoxTip.getValue();
+        String tipId = dataprovider.buscarIdTiposervicioPorNombre(nombreServicio);
+	    String idEnt = dataprovider.buscarIdEntPorNombre(nombreEnt);
+	    boolean exito = dataprovider.guardarSer(idEnt, horario, hora, fecha, id, tipId);
+	    if (exito) {
+	    	TxtError.setText("Completado");
+	    } else {
+	        TxtError.setText("Error en guardar");
+	    }
 	}
+	
+	public void llenarComboBoxSer() {
+	    LinkedList<Servicio> listaServicio = dataprovider.getSer();
+	    BoxTip.getItems().clear();
+	    for (Servicio servicio : listaServicio) {
+	    	BoxTip.getItems().add(servicio.getNombreTipoServicio());
+	    }
+	}	
 	/**
      * Método para inicializar el controlador.
      * Llama a los métodos getEnt() y llenarComboBoxEnt() para obtener la lista de entrenadores y llenar el ComboBox.
@@ -109,6 +121,7 @@ public class AddSerViewController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		getEnt();
 		llenarComboBoxEnt();
+		llenarComboBoxSer();
 	}
 
 

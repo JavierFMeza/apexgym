@@ -16,7 +16,7 @@
    <children>
       <BorderPane layoutY="69.0" prefHeight="381.0" prefWidth="800.0">
          <center>
-            <GridPane prefHeight="390.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="349.0" prefWidth="800.0" BorderPane.alignment="CENTER">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -69,7 +69,6 @@
                         <Insets left="85.0" right="10.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button fx:id="BtnCrear" mnemonicParsing="false" onMouseClicked="#onCrearClicked" prefHeight="34.0" prefWidth="79.0" text="Crear" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                   <Label fx:id="LbError" alignment="CENTER" contentDisplay="CENTER" prefHeight="81.0" prefWidth="400.0" textAlignment="CENTER" textFill="RED" wrapText="true" GridPane.rowIndex="2">
                      <font>
                         <Font name="Times New Roman" size="24.0" />
@@ -98,6 +97,19 @@
                         <Insets left="85.0" right="10.0" />
                      </GridPane.margin>
                   </TextField>
+                  <Label prefHeight="75.0" prefWidth="103.0" text="Tipo servicio" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+                  <ComboBox fx:id="BoxTip" prefHeight="25.0" prefWidth="438.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets left="100.0" />
+                     </GridPane.margin>
+                  </ComboBox>
                </children>
             </GridPane>
          </center>
@@ -113,5 +125,6 @@
             <Font name="Times New Roman" size="18.0" />
          </font>
       </Label>
+      <Button fx:id="BtnCrear" layoutX="361.0" layoutY="433.0" mnemonicParsing="false" onMouseClicked="#onCrearClicked" prefHeight="34.0" prefWidth="79.0" text="Crear" />
    </children>
 </AnchorPane>

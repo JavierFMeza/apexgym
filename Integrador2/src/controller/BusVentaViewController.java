@@ -84,17 +84,18 @@ public class BusVentaViewController implements Initializable{
 	    BaseDatos dataprovider = new BaseDatos(); 
 	    LinkedList<Venta> data2 = dataprovider.getVenta2(TxtBus.getText());
 	    if (!data2.isEmpty()) {
-	        this.ColCan.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("cantidad"));
-	        this.ColId.setCellValueFactory(new PropertyValueFactory<Venta, String>("id"));
-	        this.ColFec.setCellValueFactory(new PropertyValueFactory<Venta, String>("fecha"));
-	        this.ColNom.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
-	        this.ColPre.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("precio"));
-	        this.ColVen.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
-	        this.Colpreto.setCellValueFactory(cellData -> {
+			this.ColCan.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("cantidad"));
+			this.ColId.setCellValueFactory(new PropertyValueFactory<Venta, String>("id"));
+			this.ColFec.setCellValueFactory(new PropertyValueFactory<Venta, String>("fecha"));
+			this.ColNom.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
+			this.ColPre.setCellValueFactory(new PropertyValueFactory<Venta, Integer>("precio"));
+			this.ColVen.setCellValueFactory(new PropertyValueFactory<Venta, String>("nombre"));
+			this.Colpreto.setCellValueFactory(cellData -> {
                 Venta venta = cellData.getValue();
                 int total = venta.getCantidad() * venta.getPrecio();
                 return new SimpleIntegerProperty(total).asObject();
                 });
+	        
 	        ObservableList<Venta> ventaObservableList = FXCollections.observableArrayList(data2);
 	        tableBuscar.setItems(ventaObservableList);
 	        txtError.setText("");

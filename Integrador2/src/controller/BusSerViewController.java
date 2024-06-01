@@ -7,6 +7,7 @@ import datos.BaseDatos;
 import datos.Entrenador;
 import datos.Servicio;
 import datos.Venta;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,6 +49,12 @@ public class BusSerViewController implements Initializable{
     private TableColumn<Servicio, String> ColId;
 
     @FXML
+    private TableColumn<Servicio, String> ColSer;
+
+    @FXML
+    private TableColumn<Servicio, Integer> ColVal;
+
+    @FXML
     private TextField TxtBus;
 
     @FXML
@@ -77,21 +84,27 @@ public class BusSerViewController implements Initializable{
      */
 	@FXML
 	public void btnBUsOnAction(ActionEvent event) {
-		BaseDatos dataprovider = new BaseDatos(); 
+	    BaseDatos dataprovider = new BaseDatos();
 	    LinkedList<Servicio> data2 = dataprovider.getSer2(TxtBus.getText());
 	    if (!data2.isEmpty()) {
 	        this.ColId.setCellValueFactory(new PropertyValueFactory<Servicio, String>("id"));
 	        this.ColFec.setCellValueFactory(new PropertyValueFactory<Servicio, String>("fecha"));
 	        this.ColHorar.setCellValueFactory(new PropertyValueFactory<Servicio, String>("horario"));
 	        this.ColHora.setCellValueFactory(new PropertyValueFactory<Servicio, Integer>("horas"));
-	        this.ColEnt.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombre"));
-	        ObservableList<Servicio> ventaObservableList = FXCollections.observableArrayList(data2);
-	        tableBuscar.setItems(ventaObservableList);
+	        this.ColEnt.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombreEntrenador"));
+	        this.ColSer.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombreTipoServicio"));
+	        this.ColVal.setCellValueFactory(cellData -> {
+	            Servicio servicio = cellData.getValue();
+	            int total = servicio.getHoras() * (int) servicio.getPrecioHora();
+	            return new SimpleIntegerProperty(total).asObject();});
+	        ObservableList<Servicio> servicioObservableList = FXCollections.observableArrayList(data2);
+	        tableBuscar.setItems(servicioObservableList);
 	        txtError.setText("");
 	    } else {
 	        txtError.setText("Error en la busqueda");
 	    }
 	}
+
 	/**
      * Método llamado cuando se hace clic en el botón de retroceso.
      * Crea una nueva instancia de LoadMenuEntView para cargar la vista del menú de entrenador.
@@ -125,7 +138,12 @@ public class BusSerViewController implements Initializable{
         this.ColFec.setCellValueFactory(new PropertyValueFactory<Servicio, String>("fecha"));
         this.ColHorar.setCellValueFactory(new PropertyValueFactory<Servicio, String>("horario"));
         this.ColHora.setCellValueFactory(new PropertyValueFactory<Servicio, Integer>("horas"));
-        this.ColEnt.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombre"));
+        this.ColEnt.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombreEntrenador"));
+        this.ColSer.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombreTipoServicio"));
+        this.ColVal.setCellValueFactory(cellData -> {
+            Servicio servicio = cellData.getValue();
+            int total = servicio.getHoras() * (int) servicio.getPrecioHora();
+            return new SimpleIntegerProperty(total).asObject();});
 		tableBuscar.setItems(this.data);
 		cargar();
 	}

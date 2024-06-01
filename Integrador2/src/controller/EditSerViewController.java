@@ -10,6 +10,7 @@ import datos.Entrenador;
 import datos.Producto;
 import datos.Servicio;
 import datos.Venta;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -59,6 +60,12 @@ public class EditSerViewController implements Initializable{
     private TableColumn<Servicio, String> ColId;
 
     @FXML
+    private TableColumn<Servicio, String> ColSer;
+
+    @FXML
+    private TableColumn<Servicio, Integer> ColVal;
+
+    @FXML
     private TextField TxtBus;
 
     @FXML
@@ -69,6 +76,9 @@ public class EditSerViewController implements Initializable{
 
     @FXML
     private ComboBox<String> comHorar;
+
+    @FXML
+    private ComboBox<String> comSer;
 
     @FXML
     private StackPane productsContent;
@@ -124,8 +134,13 @@ public class EditSerViewController implements Initializable{
      * Método para cargar los datos de los servicios desde la base de datos y establecerlos en la tabla.
      */
 	public void cargar() {
+	    if (dataprovider == null) {
+	        dataprovider = new BaseDatos();
+	    }
 	    LinkedList<Servicio> data1 = dataprovider.getSer(); 
-	    data.setAll(data1);
+	    if (data1 != null) {
+	        data.setAll(data1);
+	    }
 	}
 	/**
      * Método para limpiar los campos de texto y los ComboBox.
@@ -143,10 +158,21 @@ public class EditSerViewController implements Initializable{
 	public void llenarComboBoxEnt() {
 	    LinkedList<Entrenador> listaEntrenador = dataprovider.getEnt();
 	    comEnt.getItems().clear();
-	    for (Entrenador producto : listaEntrenador) {
-	    	comEnt.getItems().add(producto.getNombre());
+	    for (Entrenador entrenador : listaEntrenador) {
+	        comEnt.getItems().add(entrenador.getNombre());
 	    }
 	}
+	/**
+     * Método para llenar el ComboBox comSer con los nombres de los servicios disponibles.
+     */
+	public void llenarComboBoxSer() {
+		comHorar.setItems(FXCollections.observableArrayList("6-12 mañana","1-6 tarde","6-12 noche"));
+	    LinkedList<Servicio> listaServicio = dataprovider.getSer();
+	    comSer.getItems().clear();
+	    for (Servicio servicio : listaServicio) {
+	        comSer.getItems().add(servicio.getNombreTipoServicio());
+	    }
+	}	
 	/**
      * Método llamado cuando se hace clic en el botón de eliminar.
      * Elimina el servicio seleccionado de la tabla y de la base de datos.
@@ -194,17 +220,18 @@ public class EditSerViewController implements Initializable{
 	 * @param event El evento de selección del mouse.
 	 */
 	@FXML
-    void onSelection(MouseEvent event) {
-		tableEdit.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-            	txtId.setText(String.valueOf(newValue.getId()));
-            	txtHora.setText(String.valueOf(newValue.getHoras()));
-            	txtFec.setText(String.valueOf(newValue.getFecha()));
-            	comEnt.setValue(newValue.getNombre());
-            	comHorar.setValue(newValue.getHorario());
-            	llenarComboBoxEnt();
-            }
-        });
+	public void onSelection(MouseEvent event) {
+	    tableEdit.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue != null) {
+	            txtId.setText(String.valueOf(newValue.getId()));
+	            txtHora.setText(String.valueOf(newValue.getHoras()));
+	            txtFec.setText(String.valueOf(newValue.getFecha()));
+	            comEnt.setValue(newValue.getNombreEntrenador());
+	            comHorar.setValue(newValue.getHorario());
+	            comSer.setValue(newValue.getNombreTipoServicio());
+	        }
+	    });
+
     }
 	/**
 	 * Método llamado cuando se hace clic en el botón de guardar.
@@ -214,16 +241,25 @@ public class EditSerViewController implements Initializable{
 	 */
 	@FXML
 	public void btnGuardarOnAction(MouseEvent event) {
-		String nombreEntidad = comEnt.getValue();
+		String nombreEnt = comEnt.getValue();
         String horario = comHorar.getValue();
-        int cantidad = Integer.parseInt(txtHora.getText());
+        int horas = Integer.parseInt(txtHora.getText());
         String fecha = txtFec.getText();
         String id = txtId.getText();
-        String idEntidad = dataprovider.buscarIdSerPorNombre(nombreEntidad);
-        dataprovider.actualizarVenta(idEntidad, horario, cantidad, fecha, id);
+        String nombreServicio = comSer.getValue();
+        String tipId = dataprovider.buscarIdTiposervicioPorNombre(nombreServicio);
+        String idEnt = dataprovider.buscarIdEntPorNombre(nombreEnt);
+        System.out.println("tipId "+tipId);
+        System.out.println("horas "+horas);
+        System.out.println("idEntidad "+idEnt);
+        System.out.println("id "+id);
+        System.out.println("fecha "+fecha);
+        System.out.println("horario "+horario);
+        dataprovider.actualizarServicio(id, horario, horas, fecha, idEnt, tipId);
         limpiarCampos();
         cargar();
         llenarComboBoxEnt();
+        llenarComboBoxSer();
         
 	}
 	/**
@@ -237,15 +273,20 @@ public class EditSerViewController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
-		comHorar.setItems(FXCollections.observableArrayList("Mañana","Tarde","Noche"));
 		this.dataprovider = new BaseDatos();
-		this.ColHora.setCellValueFactory(new PropertyValueFactory<Servicio, Integer>("horas"));
 		this.ColId.setCellValueFactory(new PropertyValueFactory<Servicio, String>("id"));
-		this.ColHorar.setCellValueFactory(new PropertyValueFactory<Servicio, String>("horario"));
-		this.ColEnt.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombre"));
-		this.ColFec.setCellValueFactory(new PropertyValueFactory<Servicio, String>("fecha"));
+        this.ColFec.setCellValueFactory(new PropertyValueFactory<Servicio, String>("fecha"));
+        this.ColHorar.setCellValueFactory(new PropertyValueFactory<Servicio, String>("horario"));
+        this.ColHora.setCellValueFactory(new PropertyValueFactory<Servicio, Integer>("horas"));
+        this.ColEnt.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombreEntrenador"));
+        this.ColSer.setCellValueFactory(new PropertyValueFactory<Servicio, String>("nombreTipoServicio"));
+        this.ColVal.setCellValueFactory(cellData -> {
+            Servicio servicio = cellData.getValue();
+            int total = servicio.getHoras() * (int) servicio.getPrecioHora();
+            return new SimpleIntegerProperty(total).asObject();});
 		tableEdit.setItems(this.data);
 		cargar();
 		llenarComboBoxEnt();
+        llenarComboBoxSer();
 	}
 }

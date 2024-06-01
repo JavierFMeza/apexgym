@@ -135,78 +135,103 @@ public class BaseDatos {
 	 * 
 	 * @return LinkedList<Servicio> Una lista de servicios.
 	 */
-	public LinkedList<Servicio> getSer(){
-		LinkedList<Servicio> data1 = new LinkedList<Servicio>();
-		Connection conn = this.getConnection();
-		Statement st;
-		try {
-			st = conn.createStatement();
-			String query = "SELECT s.id, s.horario, s.fecha, s.horas, e.nombre " +
-						"FROM servicio s " +
-		               "JOIN entrenador e ON s.cedent = e.cedula ";
-			ResultSet result = st.executeQuery(query);
-			while(result.next()) {
-				data1.add(new Servicio(result.getString(1), result.getString(2), result.getString(3), result.getInt(4), result.getString(5)));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return data1;
+	public LinkedList<Servicio> getSer() {
+	    LinkedList<Servicio> data1 = new LinkedList<Servicio>();
+	    Connection conn = this.getConnection();
+	    Statement st;
+	    try {
+	        st = conn.createStatement();
+	        String query = "SELECT s.id, s.horario, TO_CHAR(s.fecha, 'DD-MM-YYYY'), s.horas, e.nombre, t.nombre, t.preciohora " +
+	                       "FROM servicio s " +
+	                       "JOIN entrenador e ON s.cedent = e.cedula " +
+	                       "JOIN tiposervicio t ON s.tipid = t.id";
+	        ResultSet result = st.executeQuery(query);
+	        while(result.next()) {
+	            data1.add(new Servicio(result.getString(1),result.getString(2),result.getString(3),result.getInt(4),result.getString(5),result.getString(6),result.getInt(7)));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return data1;
 	}
+
 	/**
 	 * Obtiene un servicio específico según el nombre proporcionado.
 	 * 
 	 * @param nombre El nombre del servicio a buscar.
 	 * @return LinkedList<Servicio> Una lista de servicios que coinciden con el nombre.
 	 */
-	public LinkedList<Servicio> getSer2(String nombre){
-	    LinkedList<Servicio> data2 = new LinkedList<Servicio>();
-	    Connection conn = this.getConnection();
+	public LinkedList<Servicio> getSer2(String id) {
+	    LinkedList<Servicio> data2 = new LinkedList<>();
+	    Connection conn = null;
 	    PreparedStatement st = null;
+	    ResultSet result = null;
 	    try {
-	        String query = "SELECT s.id, s.horario, s.fecha, s.horas, e.nombre " +
-						"FROM servicio s " +
-		               "JOIN entrenador e ON s.cedent = e.cedula " +
-		               "WHERE s.id = ?";
+	        conn = this.getConnection();
+	        String query = "SELECT s.id, s.horario, TO_CHAR(s.fecha, 'DD-MM-YYYY'), s.horas, e.nombre, t.nombre, t.preciohora " +
+                    "FROM servicio s " +
+                    "JOIN entrenador e ON s.cedent = e.cedula " +
+                    "JOIN tiposervicio t ON s.tipid = t.id" +
+	                "WHERE s.id = ?";
 	        st = conn.prepareStatement(query);
-	        st.setString(1, nombre);
-	        ResultSet result = st.executeQuery();
-	        while(result.next()) {
-	        	data2.add(new Servicio(result.getString(1), result.getString(2), result.getString(3), result.getInt(4), result.getString(5)));
-			}
+	        st.setString(1, id);
+	        result = st.executeQuery();
+	        while (result.next()) {
+	        	data2.add(new Servicio(result.getString(1),result.getString(2),result.getString(3),result.getInt(4),result.getString(5),result.getString(6),result.getInt(7)));
+	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (result != null) result.close();
+	            if (st != null) st.close();
+	            if (conn != null) conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 	    }
 	    return data2;
 	}
+
 	/**
 	 * Obtiene una venta específica según el ID proporcionado.
 	 * 
 	 * @param id El ID de la venta a buscar.
 	 * @return LinkedList<Venta> Una lista de ventas que coinciden con el ID.
 	 */
-	public LinkedList<Venta> getVenta2(String id){
-	    LinkedList<Venta> data2 = new LinkedList<Venta>();
-	    Connection conn = this.getConnection();
+	public LinkedList<Venta> getVenta2(String id) {
+	    LinkedList<Venta> data2 = new LinkedList<>();
+	    Connection conn = null;
 	    PreparedStatement st = null;
+	    ResultSet result = null;
 	    try {
+	        conn = this.getConnection();
 	        String query = "SELECT v.id, p.nombre, p.preciounit, TO_CHAR(v.fecha, 'DD-MM-YYYY'), ve.nombre, v.cantidad " +
-		               "FROM producto p " +
-		               "JOIN ventaprod vp ON p.id = vp.prodid " +
-		               "JOIN venta v ON vp.ventaid = v.id " +
-		               "JOIN vendedor ve ON v.cedven = ve.cedula" +
+	                       "FROM producto p " +
+	                       "JOIN ventaprod vp ON p.id = vp.prodid " +
+	                       "JOIN venta v ON vp.ventaid = v.id " +
+	                       "JOIN vendedor ve ON v.cedven = ve.cedula " +
 	                       "WHERE v.id = ?";
 	        st = conn.prepareStatement(query);
 	        st.setString(1, id);
-	        ResultSet result = st.executeQuery();
-	        while(result.next()) {
-	            data2.add(new Venta(result.getString(1), result.getString(2), result.getInt(3), result.getString(4), result.getString(5),result.getInt(6)));
+	        result = st.executeQuery();
+	        while (result.next()) {
+	            data2.add(new Venta(result.getString(1),result.getString(2),result.getInt(3),result.getString(4),result.getString(5),result.getInt(6)));
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (result != null) result.close();
+	            if (st != null) st.close();
+	            if (conn != null) conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 	    }
 	    return data2;
 	}
+
 	/**
 	 * Elimina una venta de la base de datos según el ID proporcionado.
 	 * 
@@ -214,23 +239,30 @@ public class BaseDatos {
 	 * @return boolean true si la venta se eliminó correctamente, false de lo contrario.
 	 */
 	public boolean eliminarVenta(String id) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        boolean eliminado = false;
-        try {
-            conn = getConnection();
-            String query = "DELETE FROM venta WHERE id = ?";
-            stmt = conn.prepareStatement(query);
-            stmt.setString(1, id);
-            int filasAfectadas = stmt.executeUpdate();
-            if (filasAfectadas > 0) {
-                eliminado = true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return eliminado;
-	}
+		try (Connection conn = getConnection();
+		         PreparedStatement stmtVentaProd = conn.prepareStatement("DELETE FROM ventaprod WHERE ventaid = ?");
+		         PreparedStatement stmtVenta = conn.prepareStatement("DELETE FROM venta WHERE id = ?")) {
+		        
+		        conn.setAutoCommit(false);
+
+		        stmtVentaProd.setString(1, id);
+		        int filasAfectadasVentaProd = stmtVentaProd.executeUpdate();
+
+		        stmtVenta.setString(1, id);
+		        int filasAfectadasVenta = stmtVenta.executeUpdate();
+
+		        if (filasAfectadasVentaProd > 0 && filasAfectadasVenta > 0) {
+		            conn.commit();
+		            return true;
+		        } else {
+		            conn.rollback();
+		            return false;
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return false;
+		    }
+		}
 	/**
 	 * Elimina un servicio de la base de datos según el ID proporcionado.
 	 * 
@@ -243,7 +275,7 @@ public class BaseDatos {
         boolean eliminado = false;
         try {
             conn = getConnection();
-            String query = "DELETE FROM servicios WHERE id = ?";
+            String query = "DELETE FROM servicio WHERE id = ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, id);
             int filasAfectadas = stmt.executeUpdate();
@@ -311,7 +343,7 @@ public class BaseDatos {
 	 * @param nombreEnt El nombre del entrenador cuyo servicio se busca.
 	 * @return String El ID del servicio si se encuentra, de lo contrario, null.
 	 */
-	public String buscarIdSerPorNombre(String nombreEnt) {
+	public String buscarIdEntPorNombre(String nombreEnt) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
@@ -331,6 +363,27 @@ public class BaseDatos {
 	    } 
 	    return idProducto;
 	}
+	
+	public String buscarIdTiposervicioPorNombre(String nombreServicio) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    String idTipoServicio = null;
+	    try {
+	        conn = getConnection();
+	        String query = "SELECT id FROM tiposervicio WHERE nombre = ?";
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, nombreServicio);
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            idTipoServicio = rs.getString("id");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } 
+	  
+	    return idTipoServicio;
+	} 
 	/**
 	 * Actualiza los datos de una venta en la base de datos.
 	 * 
@@ -370,6 +423,42 @@ public class BaseDatos {
 	    }
 	}
 
+	/**
+	 * Actualiza los datos de una servicio en la base de datos.
+	 * 
+	 * @param idServicio El ID del servicio vendido.
+	 * @param horario El horario del servicio.
+	 * @param hora La cantidad de horas vendidas.
+	 * @param fecha La fecha de la servicio en formato "DD-MM-YYYY".
+	 * @param idTipoServicio El ID del servicio a actualizar.
+	 * @param idEntrenador El ID del entrenador a actualizar.
+	 */
+	public void actualizarServicio(String id, String horario, int horas, String fecha, String idEnt, String tipId) {
+		String sqlServicio = "UPDATE servicio SET id = ?, horario = ?, fecha = TO_DATE(?, 'DD-MM-YYYY'), horas = ?, cedent = ?, tipid = ? WHERE id = ?";
+
+	    try (Connection conn = getConnection();
+	            PreparedStatement statementServicio = conn.prepareStatement(sqlServicio)) {
+	    		
+	           statementServicio.setString(1, id);
+	           statementServicio.setString(2, horario);
+	           statementServicio.setString(3, fecha); 
+	           statementServicio.setInt(4, horas);
+	           statementServicio.setString(5, idEnt);
+	           statementServicio.setString(6, tipId);
+	           statementServicio.setString(7, id);
+	           int rowsUpdatedServicio = statementServicio.executeUpdate();
+
+	           if (rowsUpdatedServicio > 0) {
+	               System.out.println("¡Los datos del servicio han sido actualizados correctamente!");
+	           } else {
+	               System.out.println("¡No se han realizado cambios en el servicio!");
+	           }
+	       } catch (SQLException e) {
+	           System.err.println("Error al actualizar los datos del servicio: " + e.getMessage());
+	       }
+	   }
+
+	
     /**
      * Obtiene una lista de vendedores desde la base de datos.
      * 
@@ -492,24 +581,32 @@ public class BaseDatos {
      * @param id El ID del servicio.
      * @return boolean true si el servicio se guardó correctamente, false de lo contrario.
      */
-    public boolean guardarSer(String idEnt, String horario, int hora, String fecha, String id) {
+    public boolean guardarSer(String idEnt, String horario, int hora, String fecha, String id, String tipId) {
         Connection conn = getConnection();
         PreparedStatement pst = null;
         boolean exito = false;
         try {
-            String query = "INSERT INTO servicio (id, horario, fecha, horas,cedent) VALUES (?, ?, TO_DATE(?,'DD-MM-YYYY'),?,?)";
+            String query = "INSERT INTO servicio (id, horario, fecha, horas, cedent, tipid) VALUES (?, ?, TO_DATE(?,'DD-MM-YYYY'), ?, ?, ?)";
             pst = conn.prepareStatement(query);
-            pst.setString(5, idEnt);
-            pst.setString(2, horario);
-            pst.setInt(4, hora);
-            pst.setString(3, fecha);
             pst.setString(1, id);
+            pst.setString(2, horario);
+            pst.setString(3, fecha);
+            pst.setInt(4, hora);
+            pst.setString(5, idEnt);
+            pst.setString(6, tipId);
             int filasAfectadas = pst.executeUpdate();
             if (filasAfectadas > 0) {
                 exito = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (pst != null) pst.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return exito;
     }
