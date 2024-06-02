@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class BaseDatos {
 	private String conectionstr = "jdbc:oracle:thin:@192.168.254.215:1521:orcl";
-	private String username = "apexgym";
-	private String password = "apexgym";
+	private String username = "apexgym1";
+	private String password = "apexgym1";
 	
 	public Connection getConnection() {
 		Connection conn = null;

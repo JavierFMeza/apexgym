@@ -47,20 +47,6 @@ public class AddVentasViewController implements Initializable {
 	private ObservableList<Producto> data  = FXCollections.observableArrayList();
 	private ObservableList<Vendedor> data1  = FXCollections.observableArrayList();
 	/**
-     * Método para obtener la lista de productos desde la base de datos.
-     */
-	public void getProd() {
-	    LinkedList<Producto> data1 = dataprovider.getProd(); 
-	    data.setAll(data1);
-	}
-	/**
-     * Método para obtener la lista de vendedores desde la base de datos.
-     */
-	public void getVend() {
-	    LinkedList<Vendedor> data2 = dataprovider.getVend(); 
-	    data1.setAll(data2);
-	}
-	/**
      * Método para llenar el ComboBox con los nombres de los productos.
      */
 	public void llenarComboBoxProd() {
@@ -123,8 +109,6 @@ public class AddVentasViewController implements Initializable {
      */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		getProd();
-		getVend();
 		llenarComboBoxProd();
 		llenarComboBoxVend();
 		
